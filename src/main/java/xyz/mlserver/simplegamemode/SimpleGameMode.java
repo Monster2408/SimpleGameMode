@@ -7,6 +7,7 @@ import xyz.mlserver.simplegamemode.commands.adventure;
 import xyz.mlserver.simplegamemode.commands.creative;
 import xyz.mlserver.simplegamemode.commands.spectator;
 import xyz.mlserver.simplegamemode.commands.survival;
+import xyz.mlserver.simplegamemode.utils.CustomConfiguration;
 
 public final class SimpleGameMode extends JavaPlugin {
 
@@ -18,6 +19,8 @@ public final class SimpleGameMode extends JavaPlugin {
         return PREFIX;
     }
 
+    private static CustomConfiguration config;
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -26,6 +29,11 @@ public final class SimpleGameMode extends JavaPlugin {
         getCommand("c").setExecutor(new creative());
         getCommand("a").setExecutor(new adventure());
         getCommand("sp").setExecutor(new spectator());
+
+        config = new CustomConfiguration(this);
+        config.saveDefaultConfig();
+
+        checkUpdate(config.getConfig().getBoolean("update-checker", true));
     }
 
     @Override
@@ -33,53 +41,33 @@ public final class SimpleGameMode extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public void checkUpdate() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            plugin.getServer().getConsoleSender().sendMessage(getPrefix() + "Checking for updates...");
+    public static void checkUpdate(boolean enabled) {
+        if (!enabled)
+            return;
 
-            final UpdateChecker.UpdateResult result = new UpdateChecker(plugin, 85811).getResult();
+        plugin.getServer().getConsoleSender().sendMessage("Checking for updates...");
 
-            int prioLevel = 0;
-            String prioColor = ChatColor.AQUA.toString();
-            String prioLevelName = "null";
+        final UpdateChecker.UpdateResult result = new UpdateChecker(plugin, 116561).getResult();
 
-            switch (result.getType()) {
-                case FAIL_SPIGOT:
-                    plugin.getServer().getConsoleSender().sendMessage(getPrefix() + ChatColor.GOLD + "Warning: Could not contact Spigot to check if an update is available.");
-                    break;
-                case UPDATE_LOW:
-                    prioLevel = 1;
-                    prioLevelName = "minor";
-                    break;
-                case UPDATE_MEDIUM:
-                    prioLevel = 2;
-                    prioLevelName = "feature";
-                    prioColor = ChatColor.GOLD.toString();
-                    break;
-                case UPDATE_HIGH:
-                    prioLevel = 3;
-                    prioLevelName = "MAJOR";
-                    prioColor = ChatColor.RED.toString();
-                    break;
-                case DEV_BUILD:
-                    plugin.getServer().getConsoleSender().sendMessage(getPrefix() + ChatColor.GOLD + "Warning: You are running an experimental/development build! Proceed with caution.");
-                    break;
-                case NO_UPDATE:
-                    plugin.getServer().getConsoleSender().sendMessage(getPrefix() + ChatColor.RESET + "You are running the latest version.");
-                    break;
-                default:
-                    break;
+        switch (result) {
+            case FAIL_SPIGOT: {
+                plugin.getServer().getConsoleSender().sendMessage("Could not contact Spigot.");
+                break;
             }
-
-            if (prioLevel > 0) {
-                plugin.getServer().getConsoleSender().sendMessage( "\n" + prioColor +
-                        "===============================================================================\n" +
-                        "A " + prioLevelName + " update to InventoryRollbackPlus is available!\n" +
-                        "Download at https://www.spigotmc.org/resources/inventoryrollbackplus-1-8-1-16-x.85811/\n" +
-                        "(current: " + result.getCurrentVer() + ", latest: " + result.getLatestVer() + ")\n" +
-                        "===============================================================================\n");
+            case UPDATE_AVAILABLE: {
+                plugin.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "===============================================================================");
+                plugin.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "An update to SimpleGameMode is available!");
+                plugin.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "Download at https://www.spigotmc.org/resources/simplegamemode.116561/");
+                plugin.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "===============================================================================");
+                break;
             }
-
-        });
+            case NO_UPDATE: {
+                plugin.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "You are running the latest version.");
+                break;
+            }
+            default: {
+                break;
+            }
+        }
     }
 }

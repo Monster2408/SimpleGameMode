@@ -1,0 +1,2 @@
+## Check for Spigot updates at server startup.
+update-checker: true
