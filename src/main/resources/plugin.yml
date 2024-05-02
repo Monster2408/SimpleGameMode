@@ -1,0 +1,36 @@
+name: SimpleGameMode
+version: '${project.version}'
+main: xyz.mlserver.simplegamemode.SimpleGameMode
+api-version: 1.13
+
+commands:
+    s:
+        permission: simplegamemode.survival
+        description: survival mode command
+        aliases: ["0", "survival"]
+    c:
+        permission: simplegamemode.creative
+        description: creative mode command
+        aliases: ["1", "creative"]
+    a:
+        permission: simplegamemode.adventure
+        description: adventure mode command
+        aliases: ["2", "adventure"]
+    sp:
+        permission: simplegamemode.spectator
+        description: spectator mode command
+        aliases: ["3", "spectator"]
+
+permissions:
+    simplegamemode.survival:
+        description: Allows the player to switch to survival mode
+        default: true
+    simplegamemode.creative:
+        description: Allows the player to switch to creative mode
+        default: true
+    simplegamemode.adventure:
+        description: Allows the player to switch to adventure mode
+        default: true
+    simplegamemode.spectator:
+        description: Allows the player to switch to spectator mode
+        default: true
