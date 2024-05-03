@@ -15,11 +15,16 @@ public class UpdateChecker {
     //https://www.spigotmc.org/threads/resource-updater-for-your-plugins-v1-1.37315/
     //https://www.spigotmc.org/threads/check-for-updates-using-the-new-spigot-api.266310/
 
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin;
     private URL checkURL;
 
     private String currentVersion;
     private String availableVersion;
+
+    private String freeDownloadLink = null;
+    private String plusDownloadLink = null;
+    private boolean sendOpMessage = false;
+    private String donationLink = null;
 
     private UpdateResult result = UpdateResult.FAIL_SPIGOT;
 
@@ -84,6 +89,54 @@ public class UpdateChecker {
 
     private String regex(String version) {
         return version.replaceAll("[^0-9.]", "");
+    }
+
+    public String getFreeDownloadLink() {
+        return freeDownloadLink;
+    }
+
+    public String getPlusDownloadLink() {
+        return plusDownloadLink;
+    }
+
+    public String getAvailableVersion() {
+        return availableVersion;
+    }
+
+    public String getCurrentVersion() {
+        return currentVersion;
+    }
+
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    public boolean isSendOpMessage() {
+        return sendOpMessage;
+    }
+
+    public String getDonationLink() {
+        return donationLink;
+    }
+
+    public UpdateChecker setFreeDownloadLink(String freeDownloadLink) {
+        this.freeDownloadLink = freeDownloadLink;
+        return this;
+    }
+
+    public UpdateChecker setPlusDownloadLink(String plusDownloadLink) {
+        this.plusDownloadLink = plusDownloadLink;
+        return this;
+    }
+
+    public UpdateChecker setSendOpMessage(boolean sendOpMessage) {
+        this.sendOpMessage = sendOpMessage;
+        return this;
+    }
+
+    public UpdateChecker setDonationLink(String donationLink) {
+        this.donationLink = donationLink;
+        return this;
     }
 
 }
